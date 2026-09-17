@@ -1,0 +1,15 @@
+{
+  "name": "100 Günlük TYT + AYT Yol Haritası",
+  "short_name": "100 Gün",
+  "description": "100 günlük TYT + AYT sayısal çalışma ve ilerleme takip uygulaması",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#080b10",
+  "theme_color": "#090d12",
+  "lang": "tr",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {"src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
