@@ -1,5 +1,5 @@
-const CACHE='yusuf100-pwa-v5';
-const CORE=['./','./index.html','./manifest.webmanifest','./pwa.js?v=6','./icon.svg','./chunks/00.js','./chunks/01.js','./chunks/02.js','./chunks/03.js'];
+const CACHE='yusuf100-pwa-v6';
+const CORE=['./','./index.html','./manifest.webmanifest','./pwa.js?v=7','./icon.svg','./chunks/00.js','./chunks/01.js','./chunks/02.js','./chunks/03.js'];
 self.addEventListener('install',event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).catch(()=>{}))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',event=>{
