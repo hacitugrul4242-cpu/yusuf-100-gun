@@ -51,7 +51,7 @@ const style=document.createElement('style');
   if('serviceWorker' in navigator){
     window.addEventListener('load',async()=>{
       try{
-        const reg=await navigator.serviceWorker.register('./sw.js?v=10',{updateViaCache:'none'});
+        const reg=await navigator.serviceWorker.register('./sw.js?v=11',{updateViaCache:'none'});
         let reloading=false;
         navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloading)return;reloading=true;location.reload()});
         await reg.update();
