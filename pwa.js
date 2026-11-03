@@ -606,6 +606,214 @@
   if(typeof renderAll==="function") renderAll();
 })();
 
+
+  /* PROGRAM_PATCH_2026_11_03_RECOVERY */
+  (function recoveryPatch(){
+  if(typeof SHEETS==="undefined" || !Array.isArray(SHEETS["100 Günlük Plan"])) return;
+
+  const originalSheet=SHEETS["100 Günlük Plan"];
+  const header=originalSheet[0];
+  const oldRows=originalSheet.slice(1);
+
+  const split=v=>v==null?[]:String(v).split("\n").map(x=>x.trim()).filter(x=>x && x!=="Yok");
+  const join=a=>{const x=a.filter(Boolean);return x.length?x.join("\n"):"Yok"};
+  const add=(rows,day,col,text)=>{
+    if(day<1||day>67||!text)return;
+    const a=split(rows[day-1][col]);
+    if(!a.includes(text))a.push(text);
+    rows[day-1][col]=join(a);
+  };
+  const fmtDate=(day)=>{
+    const d=new Date(Date.UTC(2026,10,6+day-1));
+    const dd=String(d.getUTCDate()).padStart(2,"0");
+    const mm=String(d.getUTCMonth()+1).padStart(2,"0");
+    return dd+"."+mm+"."+d.getUTCFullYear();
+  };
+  const phaseFor=d=>d<=15?"TYT Telafi + AYT Geçiş":d<=40?"AYT Yoğunlaşma":d<=55?"AYT Tamamlama + Karma": "Tam Deneme + Onarım";
+
+  const rows=Array.from({length:67},(_,i)=>{
+    const d=i+1;
+    const base=oldRows[i] ? oldRows[i].slice() : [d,"","","","","",""];
+    base[0]=d;
+    base[1]=phaseFor(d);
+    base[2]="Yok";
+    base[3]="Yok";
+    base[4]="Yok";
+    base[5]="Yok";
+    base[6]=fmtDate(d)+" • "+(d<=15
+      ?"Önce yarım kalan TYT konularını kapat; ilgili ders bitince AYT’ye geç."
+      :d<=40
+        ?"AYT konu zincirini koru; günlük TYT rutinlerini aksatma."
+        :d<=55
+          ?"AYT ana konuları bitir; karışık test ve yanlış onarımını artır."
+          :"Tam deneme, süre yönetimi, yanlış analizi ve hedefli onarım.");
+    return base;
+  });
+
+  const tytTurkce=[
+    "Türkçe: Sıfat",
+    "Türkçe: Zamir",
+    "Türkçe: Zarf",
+    "Türkçe: Edat",
+    "Türkçe: Bağlaç",
+    "Türkçe: Ünlem",
+    "Türkçe: Fiil Çekimi",
+    "Türkçe: Ek Fiil",
+    "Türkçe: Fiilde Yapı",
+    "Türkçe: Fiilimsiler",
+    "Türkçe: Fiilde Çatı",
+    "Türkçe: Cümlenin Ögeleri",
+    "Türkçe: Cümle Çeşitleri",
+    "Türkçe: Anlama Dayalı Anlatım Bozuklukları",
+    "Türkçe: Dil Bilgisine Dayalı Anlatım Bozuklukları"
+  ];
+  tytTurkce.forEach((x,i)=>add(rows,i+1,2,x));
+
+  const tytMat=[
+    "Matematik: Köklü Sayılar",
+    "Matematik: Kümeler",
+    "Matematik: Mantık",
+    "Matematik: Mutlak Değer",
+    "Matematik: Basit Eşitsizlikler"
+  ];
+  tytMat.forEach((x,i)=>add(rows,i+1,2,x));
+
+  const tytFizik=[
+    "Fizik: Optik (4/4)",
+    "Fizik: Dalgalar",
+    "Fizik: Kaldırma Kuvveti (1/2)",
+    "Fizik: Kaldırma Kuvveti (2/2)",
+    "Fizik: Elektrostatik",
+    "Fizik: Elektrik Yükleri",
+    "Fizik: Elektrik Akımı",
+    "Fizik: Elektrik Devreleri",
+    "Fizik: Direnç",
+    "Fizik: Seri – Paralel Bağlama",
+    "Fizik: Manyetizma / Mıknatıslar"
+  ];
+  tytFizik.forEach((x,i)=>add(rows,i+1,2,x));
+
+  add(rows,1,2,"Biyoloji: Kalıtım (3/3)");
+  add(rows,1,2,"Kimya: Asit – Baz – Tuz (3/3)");
+
+  const collectAyt=(subject)=>{
+    const out=[];
+    for(const r of oldRows){
+      for(const x of split(r[3])){
+        if(x.startsWith(subject+":") && !out.includes(x))out.push(x);
+      }
+    }
+    return out;
+  };
+  const fallback={
+    "Matematik":[
+      "Matematik: Fonksiyonlar","Matematik: Polinomlar","Matematik: İkinci Dereceden Denklemler","Matematik: Parabol",
+      "Matematik: Denklem ve Eşitsizlik Sistemleri","Matematik: Trigonometri","Matematik: Logaritma","Matematik: Diziler",
+      "Matematik: Permütasyon – Kombinasyon – Binom – Olasılık","Matematik: Limit ve Süreklilik","Matematik: Türev","Matematik: İntegral",
+      "Matematik: AYT Geometri – Karma"
+    ],
+    "Kimya":[
+      "Kimya: Modern Atom Teorisi","Kimya: Gazlar","Kimya: Çözeltiler","Kimya: Kimya ve Enerji","Kimya: Tepkime Hızı",
+      "Kimya: Kimyasal Denge","Kimya: Asit – Baz Dengesi","Kimya: Çözünürlük Dengesi","Kimya: Kimya ve Elektrik",
+      "Kimya: Karbon Kimyasına Giriş","Kimya: Hidrokarbonlar","Kimya: Fonksiyonel Gruplar","Kimya: Enerji Kaynakları ve Bilimsel Gelişmeler"
+    ],
+    "Biyoloji":[
+      "Biyoloji: Genden Proteine","Biyoloji: Enerji Dönüşümleri","Biyoloji: İnsan Fizyolojisi",
+      "Biyoloji: Bitki Biyolojisi","Biyoloji: Komünite ve Popülasyon Ekolojisi","Biyoloji: Canlılar ve Çevre"
+    ],
+    "Fizik":[
+      "Fizik: Vektörler","Fizik: Hareket – Bağıl Hareket – Sabit İvme","Fizik: Newton Yasaları","Fizik: Atışlar",
+      "Fizik: İş – Güç – Enerji","Fizik: Momentum ve Çarpışmalar","Fizik: Tork – Denge – Kütle Merkezi – Basit Makineler",
+      "Fizik: Çembersel Hareket","Fizik: Kütleçekimi ve Kepler","Fizik: Dönme – Yuvarlanma – Açısal Momentum",
+      "Fizik: Basit Harmonik Hareket","Fizik: Dalga Mekaniği","Fizik: Elektrik Alan – Potansiyel – Sığa",
+      "Fizik: Manyetizma","Fizik: İndüksiyon – AC – Transformatör","Fizik: Atom ve Radyoaktivite",
+      "Fizik: Modern Fizik","Fizik: Modern Fiziğin Uygulamaları"
+    ]
+  };
+  const distribute=(lines,start,end)=>{
+    const list=lines.length?lines:[];
+    if(!list.length)return;
+    const span=end-start+1;
+    list.forEach((x,i)=>{
+      const day=start+Math.floor(i*span/list.length);
+      add(rows,Math.min(end,day),3,x);
+    });
+  };
+
+  const aytBio=collectAyt("Biyoloji"); distribute(aytBio.length?aytBio:fallback.Biyoloji,2,35);
+  const aytChem=collectAyt("Kimya"); distribute(aytChem.length?aytChem:fallback.Kimya,2,40);
+  const aytMat=collectAyt("Matematik"); distribute(aytMat.length?aytMat:fallback.Matematik,6,55);
+  const aytFiz=collectAyt("Fizik"); distribute(aytFiz.length?aytFiz:fallback.Fizik,12,50);
+
+  for(let d=1;d<=67;d++){
+    add(rows,d,4,"30 dk Paragraf");
+    add(rows,d,4,"Problem Rutini");
+    if(d<=50)add(rows,d,4,"Geometri: 2 test");
+    if(d>=16&&d<=58)add(rows,d,4,"Türkçe Dil Bilgisi Denemesi");
+    if(d>=6&&d<=35)add(rows,d,4,"1 Sayılar Denemesi");
+    if(d>=36&&d<=55&&((d-36)%3===0))add(rows,d,4,"TYT Matematik Branş Denemesi");
+    if(d>=59)add(rows,d,4,"TYT Türkçe Branş Denemesi");
+    if(d%2===0)add(rows,d,5,"TYT Sosyal: 2 branş denemesi");
+
+    if(d>=2&&d<=55){
+      add(rows,d,5,d%2===0?"TYT Biyoloji: 1 mini branş denemesi":"TYT Kimya: 1 mini branş denemesi");
+    }
+    if(d>=12&&d<=55&&d%2===0)add(rows,d,5,"TYT Fizik: 1 mini branş denemesi");
+
+    if(d>=36&&d<=55&&((d-36)%3===0))add(rows,d,5,"AYT Biyoloji branş denemesi");
+    if(d>=41&&d<=55&&((d-41)%3===0))add(rows,d,5,"AYT Kimya branş denemesi");
+    if(d>=51&&d<=55&&((d-51)%2===0))add(rows,d,5,"AYT Fizik branş denemesi");
+    if(d>=56&&((d-56)%3===0))add(rows,d,5,"AYT Matematik branş denemesi");
+
+    if(d>=56){
+      add(rows,d,5,d%2===0?"Tam TYT Denemesi":"Tam AYT Sayısal Denemesi");
+      add(rows,d,5,"Deneme yanlış analizi + hedefli onarım");
+    }
+  }
+
+  SHEETS["100 Günlük Plan"]=[header,...rows];
+
+  const cp=SHEETS["Kontrol Paneli"];
+  if(Array.isArray(cp)){
+    const set=(name,a,b,c)=>{
+      const r=cp.find(x=>Array.isArray(x)&&x[0]===name);
+      if(r){r[1]=a;r[2]=b;r[3]=c;}
+    };
+    set("Matematik","Yeni plan Gün 5","Yeni plan Gün 6","Gün 6–35 sayılar; Gün 36’dan sonra TYT branş. AYT mat/geometri Gün 55’te biter.");
+    set("Fizik","Yeni plan Gün 11","Yeni plan Gün 12","Optik 4/4 ile devam; AYT Fizik Gün 50’de tamamlanır.");
+    set("Kimya","Yeni plan Gün 1","Yeni plan Gün 2","Asit–Baz–Tuz 3/3 ile TYT kapanır; AYT Kimya Gün 40’ta tamamlanır.");
+    set("Biyoloji","Yeni plan Gün 1","Yeni plan Gün 2","Kalıtım 3/3 ile TYT kapanır; AYT Biyoloji Gün 35’te tamamlanır.");
+  }
+
+  try{
+    const mk="yusuf100-recovery-20261106-v1";
+    if(!localStorage.getItem(mk)){
+      localStorage.setItem("yusuf100-item-progress-v3","{}");
+      localStorage.setItem(mk,"1");
+    }
+  }catch{}
+
+  if(typeof renderAll==="function")renderAll();
+
+  setTimeout(()=>{
+    try{
+      document.title="67 Günlük TYT + AYT Telafi Programı";
+      const input=document.querySelector('input[type="date"]');
+      if(input){
+        input.value="2026-11-06";
+        input.dispatchEvent(new Event("change",{bubbles:true}));
+      }
+      const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+      const nodes=[];
+      while(walker.nextNode())nodes.push(walker.currentNode);
+      for(const n of nodes){
+        if(n.nodeValue&&n.nodeValue.includes("100 Günlük"))n.nodeValue=n.nodeValue.replaceAll("100 Günlük","67 Günlük");
+        if(n.nodeValue&&n.nodeValue.includes("100 gün"))n.nodeValue=n.nodeValue.replaceAll("100 gün","67 gün");
+      }
+    }catch{}
+  },50);
+})();
+
   const style=document.createElement('style');
   style.textContent=`
   .pwaTopActions{display:flex;align-items:center;gap:10px}.pwaInstallBtn{appearance:none;border:1px solid rgba(101,226,194,.32);background:linear-gradient(135deg,rgba(101,226,194,.18),rgba(101,226,194,.07));color:#dffff7;border-radius:13px;padding:10px 14px;font:inherit;font-size:12px;font-weight:900;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.18);transition:.2s;white-space:nowrap}.pwaInstallBtn:hover{transform:translateY(-1px);border-color:rgba(101,226,194,.6);background:linear-gradient(135deg,rgba(101,226,194,.26),rgba(101,226,194,.1))}.pwaInstallBtn:disabled{opacity:.68;cursor:default;transform:none}.pwaModal{position:fixed;inset:0;background:rgba(3,6,10,.78);backdrop-filter:blur(10px);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px}.pwaModal.show{display:flex}.pwaDialog{width:min(520px,100%);background:linear-gradient(180deg,#151d28,#0f151e);border:1px solid #2a3748;border-radius:22px;box-shadow:0 30px 100px rgba(0,0,0,.55);padding:24px;color:#f4f7fb}.pwaDialogTop{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.pwaDialog h3{margin:0 0 6px;font-size:22px}.pwaDialog p{margin:0;color:#8c98aa;line-height:1.55}.pwaClose{border:1px solid #263140;background:#161e29;color:#f4f7fb;width:36px;height:36px;border-radius:11px;cursor:pointer;font-size:20px}.pwaSteps{display:grid;gap:9px;margin:18px 0}.pwaStep{display:flex;gap:11px;align-items:flex-start;padding:12px;border:1px solid #263140;border-radius:13px;background:rgba(255,255,255,.025)}.pwaStep i{font-style:normal;width:25px;height:25px;border-radius:8px;display:grid;place-items:center;background:rgba(101,226,194,.14);color:#65e2c2;font-weight:950;flex:none}.pwaStep b{display:block;font-size:13px;margin-bottom:2px}.pwaStep span{font-size:12px;color:#8c98aa;line-height:1.45}.pwaFoot{font-size:11px;color:#8c98aa}.pwaReady{color:#65e2c2;font-weight:800}.pwaChip{font-size:10px;border:1px solid rgba(101,226,194,.22);color:#99ffe5;padding:5px 8px;border-radius:999px;background:rgba(101,226,194,.06)}
