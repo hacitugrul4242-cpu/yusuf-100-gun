@@ -1,5 +1,5 @@
-const CACHE='yusuf67-pwa-v10';
-const CORE=['./','./index.html','./manifest.webmanifest','./plan.js?v=1','./app.js?v=1','./pwa.js?v=10','./icon.svg'];
+const CACHE='yusuf67-pwa-v11';
+const CORE=['./','./index.html','./manifest.webmanifest','./plan.js?v=2','./app.js?v=1','./pwa.js?v=11','./icon.svg'];
 
 self.addEventListener('install',event=>{
   self.skipWaiting();
