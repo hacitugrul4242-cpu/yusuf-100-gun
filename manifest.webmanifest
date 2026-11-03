@@ -1,15 +1,23 @@
 {
-  "name": "100 Günlük TYT + AYT Yol Haritası",
-  "short_name": "100 Gün",
-  "description": "100 günlük TYT + AYT sayısal çalışma ve ilerleme takip uygulaması",
+  "name": "67 Günlük TYT + AYT Telafi Programı",
+  "short_name": "67 Gün",
+  "description": "06.11.2026–11.01.2027 arasındaki TYT + AYT telafi çalışma takip uygulaması.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#080b10",
   "theme_color": "#090d12",
   "lang": "tr",
-  "categories": ["education", "productivity"],
+  "categories": [
+    "education",
+    "productivity"
+  ],
   "icons": [
-    {"src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
   ]
 }
