@@ -21,7 +21,7 @@ const style=document.createElement('style');
   }
 
   const modal=document.createElement('div');modal.className='pwaModal';modal.id='pwaModal';modal.setAttribute('aria-hidden','true');
-  modal.innerHTML=`<div class="pwaDialog" role="dialog" aria-modal="true" aria-labelledby="pwaTitle"><div class="pwaDialogTop"><div><h3 id="pwaTitle">MacBook’a uygulama olarak yükle</h3><p>100 Gün uygulaması Dock’tan açılabilen bağımsız bir pencere olarak kullanılabilir.</p></div><button class="pwaClose" id="pwaClose" aria-label="Kapat">×</button></div><div class="pwaSteps"><div class="pwaStep"><i>1</i><div><b>Safari kullanıyorsan</b><span>macOS Sonoma veya daha yenide üst menüden <strong>Dosya → Dock’a Ekle…</strong> seç.</span></div></div><div class="pwaStep"><i>2</i><div><b>Chrome / Edge kullanıyorsan</b><span>Bu düğme destekleniyorsa kurulum penceresini doğrudan açar. Açılmazsa adres çubuğundaki yükleme simgesini kullan.</span></div></div><div class="pwaStep"><i>3</i><div><b>Kurulumdan sonra</b><span>Uygulama ayrı pencerede açılır. İstersen Dock’ta kalıcı tutabilirsin.</span></div></div></div><div class="pwaFoot">GitHub Pages sürümü güncellendiğinde uygulama da internet bağlantısıyla güncel sürümü alır.</div></div>`;
+  modal.innerHTML=`<div class="pwaDialog" role="dialog" aria-modal="true" aria-labelledby="pwaTitle"><div class="pwaDialogTop"><div><h3 id="pwaTitle">MacBook’a uygulama olarak yükle</h3><p>67 Gün uygulaması Dock’tan açılabilen bağımsız bir pencere olarak kullanılabilir.</p></div><button class="pwaClose" id="pwaClose" aria-label="Kapat">×</button></div><div class="pwaSteps"><div class="pwaStep"><i>1</i><div><b>Safari kullanıyorsan</b><span>macOS Sonoma veya daha yenide üst menüden <strong>Dosya → Dock’a Ekle…</strong> seç.</span></div></div><div class="pwaStep"><i>2</i><div><b>Chrome / Edge kullanıyorsan</b><span>Bu düğme destekleniyorsa kurulum penceresini doğrudan açar. Açılmazsa adres çubuğundaki yükleme simgesini kullan.</span></div></div><div class="pwaStep"><i>3</i><div><b>Kurulumdan sonra</b><span>Uygulama ayrı pencerede açılır. İstersen Dock’ta kalıcı tutabilirsin.</span></div></div></div><div class="pwaFoot">GitHub Pages sürümü güncellendiğinde uygulama da internet bağlantısıyla güncel sürümü alır.</div></div>`;
   document.body.appendChild(modal);
   modal.querySelector('#pwaClose').addEventListener('click',hideHelp);
   modal.addEventListener('click',e=>{if(e.target===modal)hideHelp()});
@@ -51,7 +51,7 @@ const style=document.createElement('style');
   if('serviceWorker' in navigator){
     window.addEventListener('load',async()=>{
       try{
-        const reg=await navigator.serviceWorker.register('./sw.js?v=9',{updateViaCache:'none'});
+        const reg=await navigator.serviceWorker.register('./sw.js?v=10',{updateViaCache:'none'});
         let reloading=false;
         navigator.serviceWorker.addEventListener('controllerchange',()=>{if(reloading)return;reloading=true;location.reload()});
         await reg.update();
