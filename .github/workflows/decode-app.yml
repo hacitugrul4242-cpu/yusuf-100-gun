@@ -1,0 +1,34 @@
+name: Decode bundled app
+on:
+  push:
+    paths:
+      - ".github/workflows/decode-app.yml"
+permissions:
+  contents: write
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode app bundle
+        run: |
+          python - <<'PY'
+          import re, base64, gzip, pathlib
+          parts=[]
+          for p in sorted(pathlib.Path("chunks").glob("*.js")):
+              s=p.read_text()
+              m=re.search(r'\+"([A-Za-z0-9+/=]+)";', s)
+              if not m:
+                  raise SystemExit(f"no payload in {p}")
+              parts.append(m.group(1))
+          data=base64.b64decode("".join(parts))
+          html=gzip.decompress(data).decode("utf-8")
+          pathlib.Path("decoded-app.html").write_text(html)
+          PY
+      - name: Commit decoded source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add decoded-app.html
+          git commit -m "Add decoded app source for maintenance" || exit 0
+          git push
