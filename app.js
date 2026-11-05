@@ -152,7 +152,7 @@ function renderPanel(){
     body='<div class="controlGrid">'+
       '<div class="controlItem"><b>Yeni takvim</b><p>06.11.2026–11.01.2027 • 67 gün</p></div>'+
       '<div class="controlItem"><b>AYT başlangıçları</b><p>Biyoloji/Kimya: Gün 2 • Matematik: Gün 6 • Fizik: Gün 12</p></div>'+
-      '<div class="controlItem"><b>AYT ana konu bitişleri</b><p>Biyoloji: 35 • Kimya: 42 • Fizik: 51 • Matematik: 53 • Analitik Geometri: 57</p></div>'+
+      '<div class="controlItem"><b>AYT ana konu bitişleri</b><p>Biyoloji: 35 • Kimya: 42 • Fizik: 53 • Matematik: 53 • Analitik Geometri: 57</p></div>'+
       '<div class="controlItem"><b>Final fazı</b><p>Gün 58–67: 5 tam TYT + 5 tam AYT, her gün yanlış analizi.</p></div>'+completed+'</div>';
   }
   $('panelBody').innerHTML=body;
