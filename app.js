@@ -17,8 +17,8 @@ const KEYS={
 const PHASES=[
   {name:'1. TYT Telafi + AYT Geçiş',range:[1,15]},
   {name:'2. AYT Yoğunlaşma',range:[16,40]},
-  {name:'3. AYT Tamamlama + Geometri',range:[41,57]},
-  {name:'4. Tam Deneme + Onarım',range:[58,67]}
+  {name:'3. AYT Tamamlama + Geometri',range:[41,60]},
+  {name:'4. Tam Deneme + Onarım',range:[61,67]}
 ];
 
 let selectedDay=Math.max(1,Math.min(TOTAL,Number(localStorage.getItem(KEYS.selected)||1)));
@@ -152,8 +152,8 @@ function renderPanel(){
     body='<div class="controlGrid">'+
       '<div class="controlItem"><b>Yeni takvim</b><p>06.11.2026–11.01.2027 • 67 gün</p></div>'+
       '<div class="controlItem"><b>AYT başlangıçları</b><p>Biyoloji/Kimya: Gün 2 • Matematik: Gün 6 • Fizik: Gün 12</p></div>'+
-      '<div class="controlItem"><b>AYT ana konu bitişleri</b><p>Biyoloji: 35 • Kimya: 42 • Fizik: 53 • Matematik: 53 • Analitik Geometri: 57</p></div>'+
-      '<div class="controlItem"><b>Final fazı</b><p>Gün 58–67: 5 tam TYT + 5 tam AYT, her gün yanlış analizi.</p></div>'+completed+'</div>';
+      '<div class="controlItem"><b>AYT ana konu bitişleri</b><p>Biyoloji: 35 • Kimya: 42 • Fizik: 53 • Matematik/İntegral: 56 • Analitik Geometri: 60</p></div>'+
+      '<div class="controlItem"><b>Final fazı</b><p>Gün 61–67: tam deneme + yanlış analizi. TYT Matematik branş denemesi yok; Problem + Geometri + Sayılar Denemesi rutinleri Gün 67’ye kadar sürer.</p></div>'+completed+'</div>';
   }
   $('panelBody').innerHTML=body;
 
